@@ -29,5 +29,5 @@ jobs:
       - run: npm ci
       - run: npm run main
         env:
-          GLADOS: ${{ secrets.GLADOS }}
-          NOTIFY: ${{ secrets.NOTIFY_WHICH }}
+          GLADOS: ${{ secrets.GLADOS_WHICH }}
+          NOTIFY: ${{ secrets.NOTIFY }}
