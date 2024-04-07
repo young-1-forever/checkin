@@ -46,7 +46,10 @@ const notify = async (contents) => {
 }
 
 const main = async () => {
-  await notify(await glados())
+  const result = await glados();
+  if (result && Number(result[2].split(' ')[2]) > 0) {
+    await notify(result);
+  }
 }
 
 main()
