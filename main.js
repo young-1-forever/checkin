@@ -19,7 +19,7 @@ async function run() {
 
         const balance = await getGladosBalance();
 
-        if (balance >= 90) {
+        if (balance >= 80) {
             await octokit.rest.actions.updateWorkflowRun({
                 owner: 'young-1-forever',
                 repo: 'checkin',
