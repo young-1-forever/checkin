@@ -1,4 +1,4 @@
-const fs = require('fs').promises;
+import fs from 'fs/promises';
 const maxPoint = 90;
 
 async function saveData(failNameSuffix, data) {
