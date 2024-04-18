@@ -7,7 +7,7 @@ on:
     - cron: 10 16 * * *
 
 jobs:
-  run: # which
+  run:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -17,17 +17,6 @@ jobs:
       - run: npm ci
       - run: npm run main
         env:
-          GLADOS: ${{ secrets.GLADOS_WHICH }}
-          NOTIFY: ${{ secrets.NOTIFY }}
-  run1: # 232
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - run: npm ci
-      - run: npm run main
-        env:
-          GLADOS: ${{ secrets.GLADOS_232 }}
+          GLADOS_WHICH: ${{ secrets.GLADOS_WHICH }}
+          GLADOS_232: ${{ secrets.GLADOS_232 }}
           NOTIFY: ${{ secrets.NOTIFY }}
