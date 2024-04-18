@@ -18,7 +18,7 @@ async function readData(failNameSuffix) {
 async function getGladosBalance(cookie, failNameSuffix) {
     if (!cookie) return;
     const previousData = await readData(failNameSuffix);
-    if (previousData && previousData.balance > maxPoint) {
+    if (!previousData || previousData.balance > maxPoint) {
         try {
             const headers = {
                 'cookie': cookie,
