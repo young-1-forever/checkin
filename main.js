@@ -38,7 +38,7 @@ async function getGladosBalance(cookie, failNameSuffix) {
 
             const newData = {
                 balance: Number(checkin.list[0].balance),
-                email: checkin.status.data.email,
+                email: status.data.email,
             };
             await saveData(failNameSuffix, newData);
 
