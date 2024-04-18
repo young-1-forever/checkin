@@ -58,6 +58,21 @@ async function getGladosBalance(cookie, failNameSuffix) {
     }
 }
 
+const notify = async (contents) => {
+    const token = process.env.NOTIFY
+    if (!token || !contents) return
+    await fetch(`https://www.pushplus.plus/send`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        token,
+        title: contents[0],
+        content: contents.join('<br>'),
+        template: 'markdown',
+      }),
+    })
+  }
+
 async function step(cookie, suffix) {
     const result = await getGladosBalance(cookie, suffix);
     if (result && Number(result[2].split(' ')[2]) > maxPoint) {
