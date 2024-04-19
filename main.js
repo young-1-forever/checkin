@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-const maxPoint = 90;
+const maxPoint = 93;
 
 async function saveData(failNameSuffix, data) {
     await fs.writeFile(`glados_data_${failNameSuffix}.json`, JSON.stringify(data));
@@ -18,7 +18,7 @@ async function readData(failNameSuffix) {
 async function getGladosBalance(cookie, failNameSuffix) {
     if (!cookie) return;
     const previousData = await readData(failNameSuffix);
-    if (!previousData || previousData.balance > maxPoint) {
+    if (!previousData || previousData.balance <= maxPoint) {
         try {
             const headers = {
                 'cookie': cookie,
@@ -75,7 +75,7 @@ const notify = async (contents) => {
 
 async function step(cookie, suffix) {
     const result = await getGladosBalance(cookie, suffix);
-    if (result && Number(result[2].split(' ')[2]) > maxPoint) {
+    if (result && Number(result[2].split(' ')[2]) <= maxPoint) {
         await notify(result);
     }
 }
