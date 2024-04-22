@@ -75,7 +75,7 @@ const notify = async (contents) => {
 
 async function step(cookie, suffix) {
     const result = await getGladosBalance(cookie, suffix);
-    if (result && Number(result[2].split(' ')[2]) <= maxPoint) {
+    if (result && Number(result[2].split(' ')[2]) >= maxPoint) {
         await notify(result);
     }
 }
