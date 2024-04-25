@@ -2,7 +2,13 @@ import fs from 'fs/promises';
 const maxPoint = 93;
 
 async function saveData(failNameSuffix, data) {
-    await fs.writeFile(`glados_data_${failNameSuffix}.json`, JSON.stringify(data));
+    try {
+        const filePath = `glados_data_${failNameSuffix}.json`;
+        await fs.writeFile(filePath, JSON.stringify(data));
+        console.log(`Data saved to ${filePath}`);
+    } catch (error) {
+        console.error('Save Data Error:', error);
+    }
 }
 
 async function readData(failNameSuffix) {
