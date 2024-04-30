@@ -6,6 +6,7 @@ async function saveData(failNameSuffix, balance) {
     } else {
         process.env.GLADOS_WHICH_POINT = balance
     }
+    console.log("saveData, saved balance points = " + balance);
 }
 
 async function readData(failNameSuffix) {
@@ -19,6 +20,7 @@ async function readData(failNameSuffix) {
 async function getGladosBalance(cookie, failNameSuffix) {
     if (!cookie) return;
     const balance = await readData(failNameSuffix);
+    console.log("saved balance points = " + balance);
     if (!balance || balance <= maxPoint) {
         try {
             const headers = {
