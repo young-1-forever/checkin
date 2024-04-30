@@ -3,10 +3,11 @@ const maxPoint = 93;
 async function saveData(failNameSuffix, balance) {
     if(failNameSuffix == "qq"){
         process.env.GLADOS_232_POINT = balance
+        console.log("saveData, saved balance points = " + process.env.GLADOS_232_POINT);
     } else {
         process.env.GLADOS_WHICH_POINT = balance
+        console.log("saveData, saved balance points = " + process.env.GLADOS_WHICH_POINT);
     }
-    console.log("saveData, saved balance points = " + balance);
 }
 
 async function readData(failNameSuffix) {
