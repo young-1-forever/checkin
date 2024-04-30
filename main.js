@@ -1,30 +1,25 @@
-import fs from 'fs/promises';
 const maxPoint = 93;
 
-async function saveData(failNameSuffix, data) {
-    try {
-        const filePath = `glados_data_${failNameSuffix}.json`;
-        await fs.writeFile(filePath, JSON.stringify(data));
-        console.log(`Data saved to ${filePath}`);
-    } catch (error) {
-        console.error('Save Data Error:', error);
+async function saveData(failNameSuffix, balance) {
+    if(failNameSuffix == "qq"){
+        process.env.GLADOS_232_POINT = balance
+    } else {
+        process.env.GLADOS_WHICH_POINT = balance
     }
 }
 
 async function readData(failNameSuffix) {
-    try {
-        const data = await fs.readFile(`glados_data_${failNameSuffix}.json`, 'utf8');
-        return JSON.parse(data);
-    } catch (error) {
-        console.error('Read Data Error:', error);
-        return null;
+    if(failNameSuffix == "qq"){
+        return process.env.GLADOS_232_POINT
+    } else {
+        return process.env.GLADOS_WHICH_POINT
     }
 }
 
 async function getGladosBalance(cookie, failNameSuffix) {
     if (!cookie) return;
-    const previousData = await readData(failNameSuffix);
-    if (!previousData || previousData.balance <= maxPoint) {
+    const balance = await readData(failNameSuffix);
+    if (!balance || balance <= maxPoint) {
         try {
             const headers = {
                 'cookie': cookie,
@@ -41,12 +36,7 @@ async function getGladosBalance(cookie, failNameSuffix) {
                 headers,
             }).then((r) => r.json())
             console.log("Left points = " + checkin.list[0].balance);
-
-            const newData = {
-                balance: Number(checkin.list[0].balance),
-                email: status.data.email,
-            };
-            await saveData(failNameSuffix, newData);
+            await saveData(failNameSuffix, Number(checkin.list[0].balance));
 
             return [
                 'Checkin OK',
