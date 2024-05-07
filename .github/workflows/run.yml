@@ -20,3 +20,5 @@ jobs:
           GLADOS_WHICH: ${{ secrets.GLADOS_WHICH }}
           GLADOS_232: ${{ secrets.GLADOS_232 }}
           NOTIFY: ${{ secrets.NOTIFY }}
+          GLADOS_WHICH_POINT: ${{ secrets.GLADOS_WHICH_POINT }}
+          GLADOS_232_POINT: ${{ secrets.GLADOS_232_POINT }}
