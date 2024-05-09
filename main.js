@@ -11,8 +11,7 @@ async function getBalance(cookie) {
         headers,
     }).then((r) => r.json())
     try {
-        const data = JSON.parse(balance);
-        const pointsAsset = data.data.find(item => item.asset === "points");
+        const pointsAsset = balance.data.find(item => item.asset === "points");
 
         if (pointsAsset) {
           console.log("Balance for asset 'points':", pointsAsset.balance);
