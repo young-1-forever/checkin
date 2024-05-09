@@ -12,40 +12,46 @@ async function getBalance(cookie) {
     }).then((r) => r.json())
     try {
         const pointsAsset = balance.data.find(item => item.asset === "points");
-
+        const leftDays = balance.data.find(item => item.asset === "ss-1");
         if (pointsAsset) {
-          console.log("Balance for asset 'points':", pointsAsset.balance);
-          return pointsAsset.balance;
+            const result = {
+                points: pointsAsset,
+                leftDays: leftDays,
+            };
+            return result;
         } else {
-          console.log("No asset with value 'points' found.");
+            console.log("No asset with value 'points' found.");
         }
-      } catch (error) {
+    } catch (error) {
         console.error("Error parsing JSON:", error);
-      }
-      return null;
+    }
+    return null;
 }
 
 async function checkInGlados(cookie, failNameSuffix) {
     if (!cookie) return;
-    const balance = await getBalance(cookie);
-    console.log("getBalance points = " + balance + ", failNameSuffix = " + failNameSuffix);
-    if (balance && balance <= maxPoint) {
+    const { points, leftDays } = await getBalance(cookie);
+    console.log("getBalance points = " + points + ", failNameSuffix = " + failNameSuffix);
+    if ((points && points <= maxPoint) || leftDays >= 2) {
         try {
             const headers = {
                 'cookie': cookie,
                 'referer': 'https://glados.rocks/console/checkin',
                 'user-agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)',
             };
+
             const checkin = await fetch('https://glados.rocks/api/user/checkin', {
                 method: 'POST',
                 headers: { ...headers, 'content-type': 'application/json' },
                 body: '{"token":"glados.one"}',
             }).then((r) => r.json());
+
             const status = await fetch('https://glados.rocks/api/user/status', {
                 method: 'GET',
                 headers,
             }).then((r) => r.json())
-            console.log("Left points = " + checkin.list[0].balance);
+            console.log("check in over, new left points = " + checkin.list[0].balance + ", email = " + status.data.email);
+
             return [
                 'Checkin OK',
                 `${checkin.message}`,
