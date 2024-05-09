@@ -1,28 +1,36 @@
 const maxPoint = 93;
 
-async function saveData(failNameSuffix, data) {
+async function getBalance(cookie) {
+    const headers = {
+        'cookie': cookie,
+        'referer': 'no-referrer',
+        'user-agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)',
+    };
+    const balance = await fetch('https://glados.rocks/api/user/balance', {
+        method: 'GET',
+        headers,
+    }).then((r) => r.json())
     try {
-        const filePath = `glados_data_${failNameSuffix}.json`;
-        await fs.writeFile(filePath, JSON.stringify(data));
-        console.log(`Data saved to ${filePath}`);
-    } catch (error) {
-        console.error('Save Data Error:', error);
-    }
+        const data = JSON.parse(balance);
+        const pointsAsset = data.data.find(item => item.asset === "points");
+
+        if (pointsAsset) {
+          console.log("Balance for asset 'points':", pointsAsset.balance);
+          return pointsAsset.balance;
+        } else {
+          console.log("No asset with value 'points' found.");
+        }
+      } catch (error) {
+        console.error("Error parsing JSON:", error);
+      }
+      return null;
 }
 
-async function readData(failNameSuffix) {
-    if(failNameSuffix == "qq"){
-        return process.env.GLADOS_232_POINT
-    } else {
-        return process.env.GLADOS_WHICH_POINT
-    }
-}
-
-async function getGladosBalance(cookie, failNameSuffix) {
+async function checkInGlados(cookie, failNameSuffix) {
     if (!cookie) return;
-    const balance = await readData(failNameSuffix);
-    console.log("saved balance points = " + balance);
-    if (!balance || balance <= maxPoint) {
+    const balance = await getBalance(cookie);
+    console.log("getBalance points = " + balance + ", failNameSuffix = " + failNameSuffix);
+    if (balance && balance <= maxPoint) {
         try {
             const headers = {
                 'cookie': cookie,
@@ -39,8 +47,6 @@ async function getGladosBalance(cookie, failNameSuffix) {
                 headers,
             }).then((r) => r.json())
             console.log("Left points = " + checkin.list[0].balance);
-            await saveData(failNameSuffix, Number(checkin.list[0].balance));
-
             return [
                 'Checkin OK',
                 `${checkin.message}`,
@@ -61,19 +67,19 @@ const notify = async (contents) => {
     const token = process.env.NOTIFY
     if (!token || !contents) return
     await fetch(`https://www.pushplus.plus/send`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        token,
-        title: contents[0],
-        content: contents.join('<br>'),
-        template: 'markdown',
-      }),
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+            token,
+            title: contents[0],
+            content: contents.join('<br>'),
+            template: 'markdown',
+        }),
     })
-  }
+}
 
 async function step(cookie, suffix) {
-    const result = await getGladosBalance(cookie, suffix);
+    const result = await checkInGlados(cookie, suffix);
     if (result && Number(result[2].split(' ')[2]) >= maxPoint) {
         await notify(result);
     }
