@@ -15,8 +15,8 @@ async function getBalance(cookie) {
         const leftDays = balance.data.find(item => item.asset === "ss-1");
         if (pointsAsset) {
             const result = {
-                points: pointsAsset,
-                leftDays: leftDays,
+                points: pointsAsset.balance,
+                leftDays: leftDays.balance,
             };
             return result;
         } else {
